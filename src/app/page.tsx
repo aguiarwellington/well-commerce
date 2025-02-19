@@ -1,4 +1,5 @@
 import { ProductType } from "@/types/productType";
+import Product from "./components/product";
 
 //funcao para pegar os produtos de uma API
 async function getProducts () {
@@ -21,17 +22,7 @@ export default  async function Home() {
 
     
     {products.map((product:ProductType) => (
-      <div key={product.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
-        <img src={product.image} alt={product.title} className="w-full h-56 object-cover object-center"/>
-        <div className="p-4">
-          <h3 className="text-gray-800 font-semibold text-lg">{product.title}</h3>
-          <p className="text-gray-600 text-sm mt-1">{product.description}</p>
-          <div className="flex items-center justify-between mt-4">
-            <h1 className="text-gray-700 font-bold">R$ {product.price}</h1>
-            <button className="px-3 py-1 bg-gray-800 text-white text-sm font-semibold rounded">Comprar</button>
-          </div>
-        </div>
-      </div>
+      <Product key={product.id} product={product} />
     ))}
 
     </div>
