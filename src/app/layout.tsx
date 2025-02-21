@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import navBar from "./components/navBar";
+import clsx from "clsx";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={'bg-slate-700'}>
+    <ClerkProvider>
+      <html lang="en">
+      <body className={clsx(geistSans.variable, 'bg-slate-700')}>
         {navBar()}
         <main className=" h-screen p-16">{children}</main>
       </body>
     </html>
+    </ClerkProvider>
+    
   );
 }
