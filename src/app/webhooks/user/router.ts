@@ -26,7 +26,7 @@ type EventDataType = {
 async function handler(request: Request) {
     try {
         const payload = await request.json();
-        const headerlist = await headers(); // ✅ Agora estamos resolvendo a Promise corretamente
+        const headerlist = await headers(); 
 
         const header = {
             'svix-id': headerlist.get('svix-id') || '',
