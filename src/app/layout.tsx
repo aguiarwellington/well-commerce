@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import navBar from "./components/navBar";
-import clsx from "clsx";
 import { ClerkProvider } from "@clerk/nextjs";
+import Hydrate from "./components/Hydrate"; // ⬅️ Importamos o `Hydrate.tsx`
+import NavBar from "./components/NavBar"
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,18 +18,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
       <html lang="en">
-      <body className={clsx(geistSans.variable, 'bg-slate-700')}>
-        {navBar()}
-        <main className=" h-screen p-16">{children}</main>
-      </body>
-    </html>
+        <body className={geistSans.variable + " bg-slate-700"}>
+          <Hydrate>
+            <NavBar /> {/* ⬅️ Agora `NavBar` só será renderizado no cliente */}
+            <main className="p-16 pt-24 h-screen">{children}</main>
+          </Hydrate>
+        </body>
+      </html>
     </ClerkProvider>
-    
   );
 }

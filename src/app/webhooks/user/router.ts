@@ -3,6 +3,11 @@ import { IncomingHttpHeaders } from 'http';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
+import Stripe from "stripe";
+
+
+// envia via webhook
+// API - integracao com prisma que joga dentro da vercel
 
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET || '';
 
@@ -45,16 +50,31 @@ async function handler(request: Request) {
         if (eventType === 'user.created' || eventType === 'user.updated') {
             const { id, attributes } = evt.data;
 
-            await prisma.user.upsert({
-                where: { externalId: id as string },
-                create: {
-                    externalId: id,
-                    attributes,
-                },
-                update: {
-                    attributes,
-                },
-            });
+            //inserir usurio no stripe
+                const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+                    apiVersion: '2025-02-24.acacia',
+                });
+
+                const customer = await stripe.customers.create({
+                    name: `${attributes.first_name} ${attributes.last_name}`,
+                    email: attributes.email_address as string,
+                })
+
+
+            
+
+                await prisma.user.upsert({
+                    where: { externalId: id as string },
+                    create: {
+                        externalId: id,
+                        stripeCustomerid: customer.id, 
+                        attributes,
+                    },
+                    update: {
+                        attributes,
+                        stripeCustomerid: customer.id, 
+                    },
+                });
 
             return NextResponse.json({ message: 'User processed' }, { status: 200 });
         }
