@@ -1,3 +1,4 @@
+// store.ts
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ProductType } from "./types/productType";
@@ -5,9 +6,10 @@ import { ProductType } from "./types/productType";
 type CartProduct = ProductType & { quantity: number };
 
 type CartState = {
-  readonly cart: CartProduct[];
-  readonly isOpen: boolean;
-  readonly checkoutState: "cart" | "checkout";
+  cart: CartProduct[];
+  isOpen: boolean;
+  checkoutState: "cart" | "checkout";
+  paymentIntent: string;
   addToCart: (product: ProductType) => void;
   removeFromCart: (productId: string) => void;
   deleteFromCart: (productId: string) => void;
@@ -15,6 +17,7 @@ type CartState = {
   toggleCart: () => void;
   cartCount: () => number;
   setCheckout: (state: "cart" | "checkout") => void;
+  setPaymentIntent: (paymentIntent: string) => void;
 };
 
 export const useCartStore = create<CartState>()(
@@ -23,11 +26,11 @@ export const useCartStore = create<CartState>()(
       cart: [],
       isOpen: false,
       checkoutState: "cart",
+      paymentIntent: "",
 
       addToCart: (product) => {
         const { cart } = get();
         const exists = cart.find((item) => item.id === product.id);
-
         if (exists) {
           set({
             cart: cart.map((item) =>
@@ -63,16 +66,21 @@ export const useCartStore = create<CartState>()(
 
       clearCart: () => set({ cart: [] }),
 
-      toggleCart: () =>
-        set((state) => ({
-          isOpen: !state.isOpen,
-        })),
+      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
-      cartCount: () =>
-        get().cart.reduce((acc, item) => acc + item.quantity, 0),
+      cartCount: () => get().cart.reduce((acc, item) => acc + item.quantity, 0),
 
       setCheckout: (state) => set({ checkoutState: state }),
+
+      setPaymentIntent: (paymentIntent) => set({ paymentIntent }),
     }),
-    { name: "cart-storage" }
+    {
+      name: "cart-storage",
+      partialize: (state) => ({
+        cart: state.cart,
+        checkoutState: state.checkoutState,
+        paymentIntent: state.paymentIntent,
+      }),
+    }
   )
 );

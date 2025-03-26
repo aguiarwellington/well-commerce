@@ -1,7 +1,11 @@
+'use client';
+
 import { formatPrice } from "@/lib/utils";
 import { useCartStore } from "@/store";
 import { X, Trash } from "lucide-react";
 import Image from "next/image";
+import CheckoutButton from "./CheckoutButton";
+import Checkout from "./Checkout";
 
 export default function CartDrawer() {
   const cartStore = useCartStore();
@@ -31,9 +35,12 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        {cartStore.cart.length === 0 ? (
+        {/* Itens do carrinho visíveis apenas quando não estiver em modo checkout */}
+        {cartStore.checkoutState === "cart" && cartStore.cart.length === 0 && (
           <p className="text-center mt-10 text-gray-500">Seu carrinho está vazio.</p>
-        ) : (
+        )}
+
+        {cartStore.checkoutState === "cart" && cartStore.cart.length > 0 && (
           <div className="flex flex-col gap-6 mt-6 overflow-y-auto max-h-[60vh]">
             {cartStore.cart.map((item) => (
               <div key={item.id} className="flex items-center gap-4 border-b pb-4">
@@ -76,6 +83,7 @@ export default function CartDrawer() {
           </div>
         )}
 
+        {/* Área inferior com total e ações */}
         {cartStore.cart.length > 0 && (
           <div className="mt-auto pt-6 border-t flex flex-col gap-4">
             <div className="flex justify-between text-lg font-bold text-white">
@@ -90,12 +98,16 @@ export default function CartDrawer() {
               Limpar Carrinho
             </button>
 
-            <button
-              onClick={() => cartStore.setCheckout("checkout")}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-lg font-semibold"
-            >
-              Finalizar compra
-            </button>
+            {/* Exibe botão de finalizar se ainda não estiver no checkout */}
+            {cartStore.cart.length > 0 && cartStore.checkoutState === "cart" && (
+  <CheckoutButton totalPrice={totalPrice} />
+)}
+
+{cartStore.checkoutState === "checkout" && <Checkout />}
+
+
+            {/* Exibe componente de checkout */}
+            {cartStore.checkoutState === "checkout" && <Checkout />}
           </div>
         )}
       </div>
