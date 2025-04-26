@@ -2,7 +2,7 @@ import { Webhook, WebhookRequiredHeaders } from 'svix';
 import { IncomingHttpHeaders } from 'http';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
-import prisma from '../../../lib/prisma';
+import prisma from '../../../../lib/prisma';
 import Stripe from "stripe";
 
 

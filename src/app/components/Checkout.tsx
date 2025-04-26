@@ -1,3 +1,6 @@
+'use client'
+
+
 // Checkout.tsx
 import { useCartStore } from "@/store";
 import { useEffect } from "react";
@@ -15,6 +18,8 @@ export default function Checkout() {
         items: cartStore.cart,
         payment_intent_id: cartStore.paymentIntent,
       }),
+    }).then((res) => {return res.json()}).then((data) => {
+      console.log(data.payment)
     });
   }, [cartStore.cart, cartStore.paymentIntent]);
 

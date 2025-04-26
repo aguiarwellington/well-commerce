@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Hydrate from "./components/Hydrate"; // ⬅️ Importamos o `Hydrate.tsx`
+import Hydrate from "./components/Hydrate"; 
 import NavBar from "./components/NavBar"
 
 
@@ -24,7 +24,7 @@ export default function RootLayout({
       <html lang="en">
         <body className={geistSans.variable + " bg-slate-700"}>
           <Hydrate>
-            <NavBar /> {/* ⬅️ Agora `NavBar` só será renderizado no cliente */}
+            <NavBar /> 
             <main className="p-16 pt-24 h-screen">{children}</main>
           </Hydrate>
         </body>

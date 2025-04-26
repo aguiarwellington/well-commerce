@@ -100,12 +100,10 @@ export default function CartDrawer() {
 
             {/* Exibe botão de finalizar se ainda não estiver no checkout */}
             {cartStore.cart.length > 0 && cartStore.checkoutState === "cart" && (
-  <CheckoutButton totalPrice={totalPrice} />
-)}
+              <CheckoutButton totalPrice={totalPrice} />
+            )}
 
-{cartStore.checkoutState === "checkout" && <Checkout />}
-
-
+            
             {/* Exibe componente de checkout */}
             {cartStore.checkoutState === "checkout" && <Checkout />}
           </div>
