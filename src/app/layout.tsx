@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import Hydrate from "./components/Hydrate"; 
-import NavBar from "./components/NavBar"
+import NavBar from "../app/components/NavBar";
+import Hydrate from "../app/components/Hydrate"; 
+
 
 
 const geistSans = Geist({
